@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RespuestaNoticias, Article } from 'src/app/interfaces/interfaces';
 import { environment } from 'src/environments/environment';
 import { NoticiasService } from '../services/noticias.service';
-import { IonSegment } from '@ionic/angular';
+import { IonSegment, IonInfiniteScroll } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab2',
@@ -12,22 +12,36 @@ import { IonSegment } from '@ionic/angular';
 })
 
 export class Tab2Page {
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
   @ViewChild(IonSegment) segment;
 
   articulos: Article[] = [];
+  segVal: any;
   categorias: string[] =['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
   constructor(private noticiasService: NoticiasService) {}
 
   ngOnInit(){
     this.segment.value = this.categorias[0];
+    this.setNoticias(this.segment.value);
   }
 
-  setNoticias(){
+  loadData(event) {
+    setTimeout(() => {
+      console.log('Done');
+      event.target.complete();
+      
+      if (this.articulos.length == 70) {
+        event.target.disabled = true;
+      }
+    }, 500);
+  }
+
+  setNoticias(categoria: string){
     this.articulos.length = 0;
-    this.noticiasService.getNoticiasCat(this.segment.value)
+    this.noticiasService.getNoticiasCat(categoria)
     .subscribe(noticias => {
       console.log(noticias);
-      console.log(this.segment.value);
+      console.log(categoria);
       this.articulos.push(...noticias.articles);
     })
   }
