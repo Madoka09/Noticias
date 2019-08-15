@@ -19,8 +19,11 @@ export interface Source {
   id?: string;
   name: string;
 }
+
 export interface RespuestaNoticias{
   status: string;
-  totalRresults: number;
+  totalResults: number;
   articles: Article[];
 }
+
+

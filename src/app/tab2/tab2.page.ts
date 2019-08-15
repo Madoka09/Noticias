@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RespuestaNoticias, Article } from 'src/app/interfaces/interfaces';
-import { environment } from 'src/environments/environment';
 import { NoticiasService } from '../services/noticias.service';
 import { IonSegment, IonInfiniteScroll } from '@ionic/angular';
 
@@ -16,33 +14,38 @@ export class Tab2Page {
   @ViewChild(IonSegment) segment;
 
   articulos: Article[] = [];
-  segVal: any;
   categorias: string[] =['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
-  constructor(private noticiasService: NoticiasService) {}
+  constructor(private noticiasService: NoticiasService) {
+  }
 
   ngOnInit(){
     this.segment.value = this.categorias[0];
-    this.setNoticias(this.segment.value);
+    this.getNoticias(this.segment.value);
   }
 
+  // REVISAR!
   loadData(event) {
     setTimeout(() => {
-      console.log('Done');
+      this.setNoticias(this.segment.value);
       event.target.complete();
-      
-      if (this.articulos.length == 70) {
+      if (this.articulos.length === 700) {
         event.target.disabled = true;
       }
     }, 500);
   }
 
-  setNoticias(categoria: string){
-    this.articulos.length = 0;
+
+  setNoticias(categoria: string, event?){
     this.noticiasService.getNoticiasCat(categoria)
     .subscribe(noticias => {
       console.log(noticias);
       console.log(categoria);
       this.articulos.push(...noticias.articles);
-    })
+    });
+  }
+
+  getNoticias(categoria: string){
+    this.articulos.length = 0;
+    this.setNoticias(categoria);
   }
 }

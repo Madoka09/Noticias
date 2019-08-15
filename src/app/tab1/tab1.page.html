@@ -1,11 +1,17 @@
 <ion-header>
   <ion-toolbar color="dark">
-    <ion-title>
-      Noticias
-    </ion-title>
+    <ion-item>
+      <ion-input #search placeholder="Palabra Clave..."></ion-input>
+      <ion-button clear item-right (click)="clear()">Buscar</ion-button>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
 <ion-content color="dark">
   <app-noticias [articulos]="articulos"></app-noticias>
+
+  <ion-infinite-scroll *ngIf="search.value != ''" threshold="100px" (ionInfinite)="loadData($event)">
+		<ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando...">
+		</ion-infinite-scroll-content>
+	</ion-infinite-scroll>
 </ion-content>
